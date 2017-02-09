@@ -7,35 +7,50 @@
  * Date: 2/1/2017
  * Time: 11:35 PM
  */
-	class Mortgage {
+namespace mortgage {
+    class Mortgage {
 
         private $monthlyPayment=0;
-        private $principal=0;
-        private $interest=0;
-        private $term=0;
-        public function __construct($Principal, $Interest, $Term)
+        private $principal;
+        private $interest;
+        private $term;
+        public function __construct($principal, $interest, $term)
         {
-            $this->principal = $Principal;
-            $this->interest = $Interest;
-            $this->term = $Term;
-            
-        }
-        function convertToMonth(){
+            $this->principal = $principal;
+            $this->interest = $interest;
+            $this->term = $this->setTerm($term);
 
         }
-        function get_principal(){
+        function setTerm($term){
+            if($term>30){
+                $term=$term;
+            }
+            elseif($term<=30){
+                $term=$this->convertTermToMonth($term);
+
+            }
+            return $term;
+        }
+        function convertTermToMonth($term){
+            return $term*12;
+
+        }
+        function getPrincipal(){
             return $this->principal;
         }
-        function get_interest(){
+        function getInterest(){
             return $this->interest;
         }
-        function get_term(){
+        function getTerm(){
             return $this->term;
         }
         //Determines the monthly payment
-        function set_MonthlyPayment(){
-            $this->monthlyPayment=$this->principal ( $this->interest(1 + $this->interest)**$this->term ) / ( (1 + $this->interest)**$this->term – 1);
-		}
+        function setMonthlyPayment(){
+            $this->monthlyPayment=calculateMonthlyPayment();
+        }
+        function calculateMonthlyPayment(){
+            $this->principal(($this->interest(1 + $this->interest)**$this->term)/((1+$this->interest)**$this->term-1));
+        }
         //Determines the principal amount and interest amount paid each month and places them in arrays. These will be used to create the table
         function get_amortization(){
             $principlePay=array();
@@ -49,4 +64,4 @@
             return array($interestPay, $principlePay);
         }
     }
-?>
+}?>
